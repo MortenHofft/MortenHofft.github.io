@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'typepicter';
-	src:url('typepicter/typepicter.eot?5oaha9');
-	src:url('typepicter/typepicter.eot?#iefix5oaha9') format('embedded-opentype'),
-		url('typepicter/typepicter.woff?5oaha9') format('woff'),
-		url('typepicter/typepicter.ttf?5oaha9') format('truetype'),
-		url('typepicter/typepicter.svg?5oaha9#typepicter') format('svg');
+	src:url('typepicter/typepicter.eot?k5p4vi');
+	src:url('typepicter/typepicter.eot?#iefixk5p4vi') format('embedded-opentype'),
+		url('typepicter/typepicter.woff?k5p4vi') format('woff'),
+		url('typepicter/typepicter.ttf?k5p4vi') format('truetype'),
+		url('typepicter/typepicter.svg?k5p4vi#typepicter') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -26,27 +26,39 @@
 .icon-branch2:before {
 	content: "\77";
 }
-.icon-trunk:before {
-	content: "\71";
-}
 .icon-space:before {
 	content: "\20";
 }
 .icon-leaf:before {
-	content: "\79";
+	content: "\59";
 }
 .icon-flower3:before {
-	content: "\74";
+	content: "\54";
 }
 .icon-flower1:before {
-	content: "\72";
+	content: "\52";
 }
 .icon-twig2:before {
 	content: "\65";
 }
 .icon-twig22:before {
-	content: "\64";
+	content: "\45";
 }
 .icon-branch22:before {
-	content: "\73";
+	content: "\57";
+}
+.icon-trunk:before {
+	content: "\71";
+}
+.icon-trunk2:before {
+	content: "\51";
+}
+.icon-leaf2:before {
+	content: "\79";
+}
+.icon-flower32:before {
+	content: "\74";
+}
+.icon-flower12:before {
+	content: "\72";
 }
