@@ -1,0 +1,20 @@
+<div class="section group" ng-repeat="type in types">
+    <p class="divider">{{type}}</p>
+    <ul>
+        <li ng-repeat="item in data.posts | filter:deepFilter(type)">
+            <div class="col-item" ng-class-odd="'cleft'" ng-class-even="'cright'">
+                <div class="post">
+                    <p class="date">{{item.gsx$date.$t}}</p>
+                    <a href="{{item.gsx$link.$t}}">
+                        <h2 class="post-header">{{item.gsx$title.$t}}</h2>
+                    </a>
+                    <p>{{item.gsx$description.$t}}</p>
+                    <a class="pull-right" href="{{item.gsx$link.$t}}">
+                        <span class="arrow">read more</span>
+                    </a>
+                    <!-- → -->
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

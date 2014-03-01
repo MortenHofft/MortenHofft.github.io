@@ -1,0 +1,73 @@
+<p class="icon- typepicter xlarge">
+           rt
+         tttrt
+       tt r t t
+     t rtt ttt tt
+     trtttt trtt ttt  rtt
+      tttd tr ttt tt tt tt
+       t tt tttrt  rtt ttt
+    t    t   tttrttttttwt
+     tt t tr  tt qtttrtr
+  y r rtrtttt  rtt trttt
+     t rtrt stt qrttrrt t
+   trttt ttr trtttrtttqr
+  tttt    r   qqttttqt ts
+     tst   y   qqrtt    tt
+       trt   y qqqt  ttdt
+ y   t wt d    qqtr   t
+     et   tt   qqqtst  y
+    tt        qqq   tt
+  y           qq y e
+y         y   qqq tt
+    y        qqqq
+            qqqqqq</p>
+
+<p class="icon- typepicter large">
+           rt  t
+       tt r t t
+     t rtt ttt tt
+      tttd tr ttt tt tt
+       t tt tttrt  rt t
+    t    t   tttrttet
+     tt t tr  tt qttrtr
+     t rtrt stt qrtt t
+     trt ttr trttrtrt
+    tt    r   qqttqttt
+       trt   y qqt  ttdt
+ y   t wt d    qtr   t
+     et   tt   qqtdt  
+    tt        qqq  tt
+  y           qq y 
+y         y   qqq 
+    y        qqq
+             qqqqq
+</p>
+
+<p class="icon- typepicter medium">
+       t
+ tt   ttt tt 
+trttr retttrtt
+ ttqtttt t ttttt
+ t tttt trttttrt
+tt ttq ttt ttr ttt
+ y   tqtrtt  ttt
+      qq  dtt
+     qq   ttrt y
+y   qq      t
+    qq   y
+     qq    y
+    qqqq
+</p>
+<p class="icon- typepicter small">
+  tt  t
+ trt trt
+t ttttt tt
+tt t q ttrt
+ y tq qq tt
+tttet   q tt
+  tr    q 
+    y  q y
+  y    qq
+        qq
+       qqqq
+</p>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Portfolio - Thesis</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css" />
+    <style>
+        iframe                {width:100%;}
+          .aspect-ratio         {position: relative;width: 100%;height: 0;padding-bottom: 56.2%;}
+          .aspect-ratio iframe  {position: absolute;width: 100%;height: 100%;left: 0; top: 0;}
+          .max                  {width:100%;  margin:auto;clear:both; padding-bottom: 1rem;}
+    </style>
+</head>
+
+<body class="bg-color">
+    <header class="header">
+        <div class="center">
+            <span class="inline portfolio">Portfolio</span>
+        </div>
+        <div class="center">
+            <span class="inline headline">
+                <h1>Thesis</h1>
+            </span>
+        </div>
+        <div class="center serif">
+            <h3>Object learning by tracking and tracking by detection</h3>
+        </div>
+        <div>
+            <div class="center bold yellow">By Morten Høfft - February 22, 2014</div>
+        </div>
+    </header>
+    <nav class="content marbot">
+        <ul>
+            <li>
+                <a href="..">Home</a>
+            </li>
+            <li>
+                <a href="https://www.facebook.com/hoefft" target="_blank" class="fi-social-facebook icon" title="Facebook"></a>
+            </li>
+            <li>
+                <a href="https://github.com/MortenHofft" target="_blank" class="fi-social-github icon" title="Github"></a>
+            </li>
+            <li>
+                <a href="http://dk.linkedin.com/pub/morten-h%C3%B8fft/5/155/811" target="_blank" class="fi-social-linkedin icon" title="LinkedIn"></a>
+            </li>
+            <li>
+                <a href="../about/">About</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="content">
+        <p class="date bottom-padding">February 22, 2014</p>
+        <div class="columns buffer">
+            <p>
+                In 2012 I wrote my thesis. The subject was computer vision and recognition of objects in videos. The user points at the object in the first frame, and the algorithm will attempt, without prior training, to recognize in real time for the remainder of the video. Below are the — slightly more technical — abstract and a sample video. The thesis is available for download.
+            </p>
+            <h2>Abstract</h2>
+            <p class="italic">
+                <span class="text-small">
+                    In this thesis I will explain and analyze a method for online long-term tracking with minimum prior information. ‘Online’ meaning that no information is used from future frames and it works in near real-time. ‘Long-term’ meaning that it can, ideally, track across scene cuts, fast camera movements and object disappearances. And ‘minimum prior information’ that it is a semi-supervised system that works with a single ostensive definition in the first frame. The method will mainly be tested on eye sequences recorded with a mobile phone. The goal is to describe the method and its components and test them under challenging circumstances. I will demonstrate how the framework can indeed build and learn a fairly robust model from a single sample, but also that there are limitations to its capabilities. Especially light changes seem challenging and it has issues with false positives as the model grows. Concluding modifications, extensions and issues will be discussed.
+                </span>
+            </p>
+
+            <form method="get" action="thesis.pdf">
+                <button class="pull-right" type="submit" title="13 Mb pdf">Download</button>
+            </form>
+        </div>
+        <div class="max">
+            <div class="aspect-ratio">
+                <iframe src="//player.vimeo.com/video/87127314?title=0&amp;byline=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-48466800-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</body>
+
+</html>
