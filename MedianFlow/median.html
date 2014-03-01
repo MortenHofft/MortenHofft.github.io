@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Portfolio - Median flow</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css" />
+    <style>
+        canvas{width:100%; height: 500px; border:1px dotted #000000;}
+        
+        .instructions{position:absolute; left:10px; top:10px; color:#bbb}
+        .resolution{position:absolute; top:10px; color:#bbb; right:10px; width:3rem;};
+        .label{display: block;}
+
+        .table{display:table; table-layout: fixed; width:100%}
+        .tr{display:table-row; width:100%}
+        .cell{display:table-cell; padding-top:0.5rem;}
+        .cell.label{width:80px;}
+
+        .listitem {color: #aaa; margin-right:1rem; font-size: 1rem;}
+        .median {text-decoration: underline; color:#000; }
+        #canvas-container{position:relative;}
+         
+    </style>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+</head>
+
+<body class="bg-color">
+    <header class="header">
+        <div class="center">
+            <span class="inline portfolio">Portfolio</span>
+        </div>
+        <div class="center">
+            <span class="inline headline">
+                <h1>Median flow</h1>
+            </span>
+        </div>
+        <div class="center serif">
+            <h3>Patch tracking using median flow</h3>
+        </div>
+        <div>
+            <div class="center bold yellow">By Morten Høfft - March 1, 2014</div>
+        </div>
+    </header>
+    <nav class="content marbot">
+        <ul>
+            <li>
+                <a href="..">Home</a>
+            </li>
+            <li>
+                <a href="https://www.facebook.com/hoefft" target="_blank" class="fi-social-facebook icon" title="Facebook"></a>
+            </li>
+            <li>
+                <a href="https://github.com/MortenHofft" target="_blank" class="fi-social-github icon" title="Github"></a>
+            </li>
+            <li>
+                <a href="http://dk.linkedin.com/pub/morten-h%C3%B8fft/5/155/811" target="_blank" class="fi-social-linkedin icon" title="LinkedIn"></a>
+            </li>
+            <li>
+                <a href="../about/">About</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="content">
+        <h2>Description and <a href="">demo</a></h2>
+        <div ng-app="median">
+            <div id="median" ng-controller="medianCtrl">
+                <div id="canvas-container">
+                    <canvas id="demo" width="200" height="100"></canvas>
+                    <span class="instructions">Drag points to see changes</span>
+                    <input class="resolution" type="text" ng-model="resolution" placeholder="Res">
+                </div>
+                <div class="table">
+                    <div class="tr" ng-repeat="k in data">
+                        <div class="cell label">{{k.label}} : </div>
+                        <div class="cell">
+                            <span class="listitem" ng-if="!near_median(k.list, 0)">. . .</span>
+                            <span class="listitem" ng-class="{median: is_median(k.list, $index)}" ng-repeat="item in k.list track by $index" ng-if="near_median(k.list, $index)">{{item | number:2}} </span>
+                        <span class="listitem" ng-if="!near_median(k.list, 0)">. . .</span>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript"> 
+        angular.module('median', []).controller('medianCtrl', function($scope) {
+            $scope.side_count = 10;
+            $scope.resolution = 4;
+            $scope.listx = [];
+            $scope.listy = [];
+            $scope.lists = [];
+            $scope.data = [
+                {label: "X", list: []},
+                {label: "Y", list: []},
+                {label: "Scale", list: []},
+            ];
+            updateModel = function(obj){
+                $scope.resolution = obj.resolution;
+                $scope.listx = obj.listx;
+                $scope.listy = obj.listy;
+                $scope.lists = obj.lists;
+                $scope.data[0].list = obj.listx;
+                $scope.data[1].list = obj.listy;
+                $scope.data[2].list = obj.lists;
+                $scope.safeApply();
+            };
+            $scope.safeApply = function(fn) {
+              var phase = this.$root.$$phase;
+              if(phase == '$apply' || phase == '$digest') {
+                if(fn && (typeof(fn) === 'function')) {
+                  fn();
+                }
+              } else {
+                this.$apply(fn);
+              }
+            };
+
+            $scope.is_median = function(list, index){
+                return Math.abs((list.length-1)/2 - index) < 1;
+            };
+            
+            $scope.near_median = function(list, index){
+                var dif = Math.abs((list.length-1)/2 - index);
+                return dif <= $scope.side_count;
+            }
+
+            $scope.$watch('resolution', function(){
+                if ($scope.resolution){
+                    if ($scope.resolution < 2) $scope.resolution = 2;
+                    if ($scope.resolution > 5) $scope.resolution = 5;
+                    resolution = $scope.resolution;
+                    init();
+                }
+            });
+            init();
+        });
+
+        var canvas = document.getElementById('demo');
+        var ctx = canvas.getContext('2d');
+
+        //START from http://stackoverflow.com/questions/15397036/drawing-dashed-lines-on-html5-canvas
+        CanvasRenderingContext2D.prototype.dashedLine = function (x1, y1, x2, y2, dashLen) {
+            if (dashLen == undefined) dashLen = 2;
+            this.moveTo(x1, y1);
+
+            var dX = x2 - x1;
+            var dY = y2 - y1;
+            var dashes = Math.floor(Math.sqrt(dX * dX + dY * dY) / dashLen);
+            var dashX = dX / dashes;
+            var dashY = dY / dashes;
+
+            var q = 0;
+            while (q++ < dashes) {
+                x1 += dashX;
+                y1 += dashY;
+                this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+            }
+            this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+        };
+        //END
+
+        var color_curr = "#333";
+        var color_prev = "pink";
+        var color_bright_line = "#ccc";
+        var color_dark_line = "#333";
+        var resolution = 3;
+        var points = resolution*resolution;
+
+        var editor = {
+            mouse_down: false,
+            selected_index: undefined
+        };
+        
+        var box_prev;
+        var box_curr;
+
+        //init();
+
+        function draw_circle(x, y, old) {
+            ctx.fillStyle = old? color_prev : color_curr;
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI*2, true); 
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function line_between(index){
+            ctx.beginPath();
+            ctx.moveTo(prev[index<<1], prev[(index<<1)+1]);
+            ctx.lineTo(curr[index<<1], curr[(index<<1)+1]);
+            ctx.stroke();
+        }
+
+        function line_between_same(index1, index2, a){
+            ctx.beginPath();
+            ctx.dashedLine(a[index1<<1], a[(index1<<1)+1], a[index2<<1], a[(index2<<1)+1], 7);
+            ctx.strokeStyle = color_bright_line;
+            ctx.stroke();
+        }
+
+        function init(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            points = resolution*resolution;
+            var width = $("#demo").width();
+            var height = $("#demo").height();
+            canvas.width = width;
+            canvas.height = height;
+            var patch_size = Math.min(width, height)/2;
+            var size = patch_size/resolution;
+            var x = (width-patch_size)/2;
+            var y = (height-patch_size)/2;
+            var unit = patch_size/(resolution-1);
+
+            prev = [];
+            curr = [];
+            for (var i=x; i<=x+patch_size; i+=unit){
+                for (var j=y; j<=y+patch_size; j+=unit){
+                    prev.push(i); prev.push(j);
+                    curr.push(i); curr.push(j);
+                }
+            }
+            for (var i=0; i<curr.length; i++) curr[i] +=  Math.floor((Math.random()*60)-30); 
+
+            box_prev = [x,y,x+patch_size, y+patch_size];
+            box_curr = [x,y,x+patch_size, y+patch_size];
+            refreshCanvas();
+        }
+
+        function refreshCanvas(){
+            //calculate means
+            var list_x = new Array();
+            var list_y = new Array();
+            var list_s = new Array();
+            for (var i=0; i < points; i++){
+                var pos = i<<1;
+                list_x.push(curr[pos]-prev[pos]);
+                list_y.push(curr[pos+1]-prev[pos+1]);
+                for (var j=i+1; j<points; j++){
+                    var pos2 = j<<1;
+                    var d1 = Math.sqrt( Math.pow(prev[pos]-prev[pos2],2) + Math.pow(prev[pos+1]-prev[pos2+1],2) );
+                    var d2 = Math.sqrt( Math.pow(curr[pos]-curr[pos2],2) + Math.pow(curr[pos+1]-curr[pos2+1],2) );
+                    list_s.push(d2/d1);
+                }
+            }
+            var median_x = median(list_x);
+            var median_y = median(list_y);
+            var median_s = median(list_s);
+            var w = Math.abs(box_prev[0]-box_prev[2]);
+            var w_mod = (w*median_s-w)/2;
+            var h = Math.abs(box_prev[1]-box_prev[3]);
+            var h_mod = (h*median_s-h)/2;
+            box_curr[0] = box_prev[0] + median_x-w_mod;
+            box_curr[1] = box_prev[1] + median_y-h_mod;
+            box_curr[2] = box_prev[2] + median_x+w_mod;
+            box_curr[3] = box_prev[3] + median_y+h_mod;
+
+            //update model
+            updateModel({resolution:resolution, listx:list_x, listy: list_y, lists: list_s});
+
+            //draw 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            //draw rectangles
+            ctx.beginPath()
+            ctx.rect(box_prev[0], box_prev[1], box_prev[2]-box_prev[0], box_prev[3]-box_prev[1]);
+            ctx.strokeStyle = color_bright_line;
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.beginPath()
+            ctx.rect(box_curr[0], box_curr[1], box_curr[2]-box_curr[0], box_curr[3]-box_curr[1]);
+            ctx.strokeStyle = color_dark_line;
+            ctx.stroke();
+            ctx.closePath();
+
+            //Draw vectors
+            ctx.strokeStyle = color_bright_line;
+            for (var i=0; i < points; i++){
+                line_between(i);
+                draw_circle(prev[i<<1], prev[(i<<1)+1], true);
+                draw_circle(curr[i<<1], curr[(i<<1)+1], false);
+            }
+        }
+
+        function median(values) {
+            values.sort( function(a,b) {return a - b;} );
+            //Array.prototype.sort.call(values, function(a, b) { return a - b; });
+            var half = Math.floor(values.length/2);
+            if(values.length % 2)
+                return values[half];
+            else
+                return (values[half-1] + values[half]) / 2.0;
+        }
+
+        function getMousePos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+          
+        canvas.addEventListener('mousedown', function(evt) {
+            var mousePos = getMousePos(canvas, evt);
+            //search for point within radius
+            for (var radius = 20; radius <= 160; radius += 20){
+                for (var i=0; i < points; i++){
+                    if (Math.abs(mousePos.x - curr[i<<1]) < radius && Math.abs(mousePos.y - curr[(i<<1)+1]) < radius){
+                        editor.selected_index = i;
+                        editor.mouse_down = true;
+                        return;
+                    }
+                }
+            }
+        }, false);
+
+        canvas.addEventListener('mousemove', function(evt) {
+            var mousePos = getMousePos(canvas, evt);
+            var radius = 50;
+            canvas.style.cursor = "default";
+            for (var i=0; i < points; i++){
+                if (Math.abs(mousePos.x - curr[i<<1]) < radius && Math.abs(mousePos.y - curr[(i<<1)+1]) < radius)
+                    canvas.style.cursor = "pointer";
+            }
+            
+            if (!editor.mouse_down) return;
+            curr[editor.selected_index<<1] = mousePos.x;
+            curr[(editor.selected_index<<1)+1] = mousePos.y;
+            refreshCanvas();
+        }, false);
+
+        canvas.addEventListener('mouseup', function(evt) {
+            if (!editor.mouse_down) return;
+            editor.mouse_down = false;
+            editor.selected_index = undefined;
+            var mousePos = getMousePos(canvas, evt);
+        }, false);
+
+        window.onresize=function(){
+            init();
+        };
+
+
+        //google analytics
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-48466800-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</body>
+
+</html>
