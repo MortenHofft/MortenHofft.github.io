@@ -138,6 +138,7 @@ function on_canvas_move(e) {
 }
 function on_canvas_up(e) {
     if (!mousedown || box[0]+box[2] == 0) return;
+    box = [Math.min(box[0], box[2]), Math.min(box[1], box[3]), Math.max(box[0], box[2]), Math.max(box[1], box[3])]
     generate_points(box);
     //RATIO width over height. used to ensure that ratio doesn't slide over til due to rounding.
     ratio = Math.abs(box[0]-box[2])/Math.abs(box[1]-box[3]);
