@@ -1,7 +1,9 @@
-<div class="section group" ng-repeat="type in types">
-    <p class="divider">{{type}}</p>
+<!--div class="section group" ng-repeat="type in types"-->
+<div class="section group">
+    <!--p class="divider">{{type}}</p-->
     <ul>
-        <li ng-repeat="item in data.posts | filter:deepFilter(type)">
+        <!--li ng-repeat="item in data.posts | filter:deepFilter(type)"-->
+        <li ng-repeat="item in data.posts | orderBy:dateSort:true">
             <div class="col-item" ng-class-odd="'cleft'" ng-class-even="'cright'">
                 <div class="post">
                     <p class="date">{{item.gsx$date.$t}}</p>

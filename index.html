@@ -49,14 +49,14 @@
     </nav>
 
     <div class="content" ng-app="posts">
-        <h1>
+        <!--h1>
             <a class="intro-post" href="about/">About</a>
         </h1>
         <div class="columns">
             <p>
                 This site works as documentation and motivation to complete undertakings, which – in my experience – all to often end up half-baked and eventually lost. It is primarily for learning and the joy of it, but some projects might turn out to have the interest of other people.
             </p>
-        </div>
+        </div-->
         <div id="posts" ng-controller="postCtrl">
             <div ng-include src="'posts.html'"></div>
         </div>
@@ -72,6 +72,9 @@
                     return item.gsx$type.$t === type;
                   };
                 };
+                $scope.dateSort = function(item) {
+                    return item.gsx$date.$t;
+                }
              });
           };
     </script>

@@ -520,6 +520,10 @@ padding:0px;
     .cell {
         bottom: 0px;
     }
+    
+    .col-item {
+        width: 50%;
+    }
 
     .xlarge, .large, .medium, .small{display:none;}
     /*.large {display:inline;left:-13rem;}*/
@@ -563,10 +567,6 @@ padding:0px;
         -webkit-column-gap: 40px;
  /* Safari and Chrome */
         column-gap: 40px;
-    }
-
-    .col-item {
-        width: 50%;
     }
 
     .xlarge, .large, .medium, .small{display:none;}
