@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width; initial-scale=1.0">
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     <title>Portfolio - Median flow</title>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
     <style>
-        canvas{width:100%; height: 500px; border:1px dotted #000000;}
-        
-        .instructions{position:absolute; left:10px; top:10px; color:#bbb}
-        .resolution{position:absolute; top:10px; color:#bbb; right:10px; width:3rem;};
+        #demo{width:100%; height: 500px; border:1px dotted #000000; margin-top:2rem}
+        #livedemo{width:100%; margin: auto;position:relative;}
+        #livedemo>div{margin:2rem auto}
+        .instructions{position:absolute; left:10px; top:10px; color:#bbb; z-index: -1}
+        .instructions p {font-size: 90%}
+        .resolution{position:absolute; bottom:10px; color:#bbb; right:10px; }
+        .resolution span {vertical-align: middle; }
+        #res {width:100%; max-width:100px; margin: 0;  border:none; vertical-align: middle}
         .label{display: block;}
 
         .table{display:table; table-layout: fixed; width:100%}
@@ -21,10 +25,22 @@
         .listitem {color: #aaa; margin-right:1rem; font-size: 1rem;}
         .median {text-decoration: underline; color:#000; }
         #canvas-container{position:relative;}
-         
+        
+        .live{margin:2rem;}
+        .live p{color: #C02522 ;text-align: center; font-size: 90%}
+        
+        #liveinstructions{
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            position: absolute;
+            top: 40%;
+            left: 25%;
+            width: 50%;
+            padding: 10px 20px 10px 20px;
+            z-index: 1;
+            font-weight: 400;}
     </style>
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
 </head>
 
@@ -42,7 +58,7 @@
             <h3>Patch tracking using median flow</h3>
         </div>
         <div>
-            <div class="center bold yellow">By Morten Høfft - March 1, 2014</div>
+            <div class="center bold yellow">By Morten Høfft - March 2, 2014</div>
         </div>
     </header>
     <nav class="content marbot">
@@ -65,34 +81,80 @@
         </ul>
     </nav>
     <div class="content">
-        <h2>Description and <a href="">demo</a></h2>
+        <p>
+            Object tracking in videos can be done in many ways. One that performs well, and is simple to understand, is the <a href="http://personal.ee.surrey.ac.uk/Personal/Z.Kalal/Publications/2010_icpr.pdf">Median Flow</a> tracker. I have implemented a javascript demo, an interactive example and written a short description.
+        </p>
+        
         <div ng-app="median">
             <div id="median" ng-controller="medianCtrl">
+                
+                <div id="livedemo" ng-show="running">
+                    <video id="webcam" width="640" height="480" style="display:none;"></video>
+                    <div style=" width:640px;height:480px;">
+                        <div id="liveinstructions">Click and drag to select your interest area. Faces are a good choice.</div>
+                        <canvas id="video_canvas" width="640" height="480"></canvas>
+                        <div id="log"></div>
+                    </div>
+                </div>
+                <div class="center live">
+                    <p>{{errormessage}}</p>
+                    <button ng-show="!running" id="startVideo" ng-click="start()">Start demo</button>
+                    <button ng-show="running" id="stopVideo" ng-click="stop()">Stop demo</button>
+                    <p ng-show="!running">requires your webcam</p>
+                </div>
+                
+                <p class="divider">Problem</p>
+                <p>
+                    Given a point in one image, the Lucas-Kanade tracking algorithm will attempt to locate the same point in the following image. This is no trivial matter and so the points are likely to slide of target. Especially if they are not carefuly selected. This means that we quickly get a cacaphony of points, going of in many directions. Further we are typically intersted in tracking an area/object and not a point.
+                </p>
+
+                
                 <div id="canvas-container">
                     <canvas id="demo" width="200" height="100"></canvas>
-                    <span class="instructions">Drag points to see changes</span>
-                    <input class="resolution" type="text" ng-model="resolution" placeholder="Res">
+                    <div class="instructions">
+                        <p>Drag points to see changes</p>
+                        <p id="outputS">s</p>
+                        <p id="outputX">x</p>
+                        <p id="outputY">y</p>
+                    </div>
+                    <div class="resolution">
+                        <span>Resolution</span>
+                        <input id="res" type="range" name="points" min="2" max="5" value="3" oninput="update_resolution()">
+                    </div>
                 </div>
+                
                 <div class="table">
                     <div class="tr" ng-repeat="k in data">
                         <div class="cell label">{{k.label}} : </div>
                         <div class="cell">
-                            <span class="listitem" ng-if="!near_median(k.list, 0)">. . .</span>
+                            <span class="listitem" ng-if="!near_median(k.list, 0)">…</span>
                             <span class="listitem" ng-class="{median: is_median(k.list, $index)}" ng-repeat="item in k.list track by $index" ng-if="near_median(k.list, $index)">{{item | number:2}} </span>
-                        <span class="listitem" ng-if="!near_median(k.list, 0)">. . .</span>
+                        <span class="listitem" ng-if="!near_median(k.list, 0)">…</span>
                         </div>
                     </div>
-                    
-                    
                 </div>
             </div>
         </div>
+        
+        <p class="divider">Median Flow solution</p>
+        <p>
+            We select an area we are instersted in. We then intiate a grid of points we can track using Lucas-Kanade point tracking. The question is how we update our area of interst based on the - often conflicting - motion estimates given by the LK point tracker. Median Flow suggest taking the median of the vectors. That is: list the movement of the points on the x-axis on take the median. Same for the y-axis. Scale is calculated by considering all pairs of points and meassuring the relative change in distance (distNew/distOld). Again the median is selected. This turns out to be a fairly robust estimate that <a href="http://personal.ee.surrey.ac.uk/Personal/Z.Kalal/Publications/2010_icpr.pdf">compares with the best</a>. Further it has the benefit of being simple to understand and implement.
+        </p>
+        <p>
+            Above example illustrates how values are calculated based on the point movement. To see changes in the medians you can drag the points (something the point tracker would normally do).
+        </p>
     </div>
 
     <script type="text/javascript"> 
+        function update_resolution(){
+            resolution = document.getElementById('res').value;
+            init();
+        }
         angular.module('median', []).controller('medianCtrl', function($scope) {
+            $scope.running = false;
+            $scope.errormessage = "";
             $scope.side_count = 10;
-            $scope.resolution = 4;
+            $scope.side_count = Math.min(10, Math.max(3, Math.round(document.documentElement.clientWidth/150)));
             $scope.listx = [];
             $scope.listy = [];
             $scope.lists = [];
@@ -102,7 +164,6 @@
                 {label: "Scale", list: []},
             ];
             updateModel = function(obj){
-                $scope.resolution = obj.resolution;
                 $scope.listx = obj.listx;
                 $scope.listy = obj.listy;
                 $scope.lists = obj.lists;
@@ -130,47 +191,42 @@
                 var dif = Math.abs((list.length-1)/2 - index);
                 return dif <= $scope.side_count;
             }
-
-            $scope.$watch('resolution', function(){
-                if ($scope.resolution){
-                    if ($scope.resolution < 2) $scope.resolution = 2;
-                    if ($scope.resolution > 5) $scope.resolution = 5;
-                    resolution = $scope.resolution;
-                    init();
-                }
-            });
+            
+            $scope.start = function(){
+                var result = startVideo(function(result){
+                    if(result.success) 
+                        $scope.running = true;
+                    else{
+                        var strAdd = "";
+                        //if( /Android|AppleWebKit|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                         //user agent sniffing. Moving target, but only used for constructive feedback. So it will have to do.
+                         if( /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                             strAdd = " Few mobile devices support this feature.";
+                        }
+                        //var strAdd = document.documentElement.clientWidth < 400
+                        $scope.errormessage = result.message + strAdd;
+                    }
+                    $scope.safeApply();
+                });
+            };
+            $scope.stop = function(){
+                stopVideo();
+                $scope.running = false;
+            };
             init();
         });
 
         var canvas = document.getElementById('demo');
         var ctx = canvas.getContext('2d');
-
-        //START from http://stackoverflow.com/questions/15397036/drawing-dashed-lines-on-html5-canvas
-        CanvasRenderingContext2D.prototype.dashedLine = function (x1, y1, x2, y2, dashLen) {
-            if (dashLen == undefined) dashLen = 2;
-            this.moveTo(x1, y1);
-
-            var dX = x2 - x1;
-            var dY = y2 - y1;
-            var dashes = Math.floor(Math.sqrt(dX * dX + dY * dY) / dashLen);
-            var dashX = dX / dashes;
-            var dashY = dY / dashes;
-
-            var q = 0;
-            while (q++ < dashes) {
-                x1 += dashX;
-                y1 += dashY;
-                this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
-            }
-            this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
-        };
-        //END
-
+        var outputS = document.getElementById('outputS');
+        var outputX = document.getElementById('outputX');
+        var outputY = document.getElementById('outputY');
+        
         var color_curr = "#333";
         var color_prev = "pink";
         var color_bright_line = "#ccc";
         var color_dark_line = "#333";
-        var resolution = 3;
+        var resolution = document.getElementById('res').value;
         var points = resolution*resolution;
 
         var editor = {
@@ -204,14 +260,33 @@
             ctx.strokeStyle = color_bright_line;
             ctx.stroke();
         }
-
+        
         function init(){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             points = resolution*resolution;
-            var width = $("#demo").width();
-            var height = $("#demo").height();
-            canvas.width = width;
-            canvas.height = height;
+            var width = document.getElementById("demo").offsetWidth;
+            height = (Math.min(500, document.documentElement.clientHeight)-50);
+            
+            var ratio = (function () {
+                var ctx = document.createElement("canvas").getContext("2d"),
+                    dpr = window.devicePixelRatio || 1,
+                    bsr = ctx.webkitBackingStorePixelRatio ||
+                          ctx.mozBackingStorePixelRatio ||
+                          ctx.msBackingStorePixelRatio ||
+                          ctx.oBackingStorePixelRatio ||
+                          ctx.backingStorePixelRatio || 1;
+
+                return dpr / bsr;
+            })();
+            
+            canvas.width = width * ratio;
+            canvas.height = height * ratio;
+            canvas.style.height = height + "px";
+            ctx = canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+
+            canvas = document.getElementById('demo');
+            ctx = canvas.getContext('2d');
+            
             var patch_size = Math.min(width, height)/2;
             var size = patch_size/resolution;
             var x = (width-patch_size)/2;
@@ -220,20 +295,29 @@
 
             prev = [];
             curr = [];
-            for (var i=x; i<=x+patch_size; i+=unit){
-                for (var j=y; j<=y+patch_size; j+=unit){
+            for (var i=x; i<=x+patch_size+1; i+=unit){
+                for (var j=y; j<=y+patch_size+1; j+=unit){
                     prev.push(i); prev.push(j);
                     curr.push(i); curr.push(j);
                 }
             }
-            for (var i=0; i<curr.length; i++) curr[i] +=  Math.floor((Math.random()*60)-30); 
+            //generate random jitter for the new points to simulate Lucas Kanade
+            seed = 1;
+            for (var i=0; i<curr.length; i++) curr[i] +=  Math.floor((random()*60)-30); 
 
             box_prev = [x,y,x+patch_size, y+patch_size];
-            box_curr = [x,y,x+patch_size, y+patch_size];
+            box_curr = new Array(4);
             refreshCanvas();
         }
+        
+        var seed = 1;
+        function random() {
+            var x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
 
-        function refreshCanvas(){
+        function refreshCanvas(update){
+            update = update===undefined? true : update;
             //calculate means
             var list_x = new Array();
             var list_y = new Array();
@@ -262,21 +346,20 @@
             box_curr[3] = box_prev[3] + median_y+h_mod;
 
             //update model
-            updateModel({resolution:resolution, listx:list_x, listy: list_y, lists: list_s});
+            if (update) updateModel({resolution:resolution, listx:list_x, listy: list_y, lists: list_s});
+            
+            //update output info
+            outputS.innerHTML = "Scale: " + (Math.round(median_s*100)/100);
+            outputX.innerHTML = "X: " + (Math.round(median_x*100)/100);
+            outputY.innerHTML = "Y: " + (Math.round(median_y*100)/100);
 
             //draw 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            //draw rectangles
+            //draw bottom rectangle
             ctx.beginPath()
             ctx.rect(box_prev[0], box_prev[1], box_prev[2]-box_prev[0], box_prev[3]-box_prev[1]);
             ctx.strokeStyle = color_bright_line;
-            ctx.stroke();
-            ctx.closePath();
-
-            ctx.beginPath()
-            ctx.rect(box_curr[0], box_curr[1], box_curr[2]-box_curr[0], box_curr[3]-box_curr[1]);
-            ctx.strokeStyle = color_dark_line;
             ctx.stroke();
             ctx.closePath();
 
@@ -287,6 +370,13 @@
                 draw_circle(prev[i<<1], prev[(i<<1)+1], true);
                 draw_circle(curr[i<<1], curr[(i<<1)+1], false);
             }
+            
+            //draw front rectangle
+            ctx.beginPath()
+            ctx.rect(box_curr[0], box_curr[1], box_curr[2]-box_curr[0], box_curr[3]-box_curr[1]);
+            ctx.strokeStyle = color_dark_line;
+            ctx.stroke();
+            ctx.closePath();
         }
 
         function median(values) {
@@ -306,11 +396,10 @@
                 y: evt.clientY - rect.top
             };
         }
-          
-        canvas.addEventListener('mousedown', function(evt) {
-            var mousePos = getMousePos(canvas, evt);
+        
+        function mDown(mousePos){
             //search for point within radius
-            for (var radius = 20; radius <= 160; radius += 20){
+            for (var radius = 20; radius <= 40; radius += 20){
                 for (var i=0; i < points; i++){
                     if (Math.abs(mousePos.x - curr[i<<1]) < radius && Math.abs(mousePos.y - curr[(i<<1)+1]) < radius){
                         editor.selected_index = i;
@@ -319,11 +408,10 @@
                     }
                 }
             }
-        }, false);
-
-        canvas.addEventListener('mousemove', function(evt) {
-            var mousePos = getMousePos(canvas, evt);
-            var radius = 50;
+            return;
+        }
+        function mMove(mousePos, update){
+            var radius = 40;
             canvas.style.cursor = "default";
             for (var i=0; i < points; i++){
                 if (Math.abs(mousePos.x - curr[i<<1]) < radius && Math.abs(mousePos.y - curr[(i<<1)+1]) < radius)
@@ -331,18 +419,75 @@
             }
             
             if (!editor.mouse_down) return;
+            if (mousePos.x < 0 || mousePos.x > canvas.width || mousePos.y < 0 || mousePos.y > canvas.height) return;
             curr[editor.selected_index<<1] = mousePos.x;
             curr[(editor.selected_index<<1)+1] = mousePos.y;
-            refreshCanvas();
-        }, false);
-
-        canvas.addEventListener('mouseup', function(evt) {
+            update = update!==undefined? update : true;
+            refreshCanvas(update);
+        }
+        function mUp(){
             if (!editor.mouse_down) return;
             editor.mouse_down = false;
             editor.selected_index = undefined;
+            refreshCanvas();
+        }
+        
+        canvas.addEventListener('mousedown', function(evt) {
             var mousePos = getMousePos(canvas, evt);
+            mDown(mousePos);
         }, false);
 
+        canvas.addEventListener('mousemove', function(evt) {
+            var mousePos = getMousePos(canvas, evt);
+            mMove(mousePos);
+        }, false);
+
+        canvas.addEventListener('mouseup', function(evt) {
+            mUp();
+        }, false);
+        
+        //offsetTop cannot be used if position is relative. AS it is with the canvas element
+        function getPos(ele){
+            var x=0;
+            var y=0;
+            while(true){
+                x += ele.offsetLeft;
+                y += ele.offsetTop;
+                if(ele.offsetParent === null){
+                    break;
+                }
+                ele = ele.offsetParent;
+            }
+            return {x:x, y:y};
+        }
+        
+        function getTouchPos(elem, e){
+            var pos = getPos(elem);
+            mousePos = {
+                x: e.targetTouches[0].pageX - pos.x,
+                y: e.targetTouches[0].pageY - pos.y};
+            return mousePos;
+        }
+        
+        function touchUp() {
+            mUp();
+        }
+ 
+        function touchDown(e) {
+            if (!e) var e = event;
+            mDown(getTouchPos(canvas, e));
+            if (editor.mouse_down) e.preventDefault();
+        }
+ 
+        function touchXY(e) {
+            if (!e) var e = event;
+            mMove(getTouchPos(canvas, e), false);
+        }
+        
+        canvas.addEventListener("touchstart", touchDown, false);
+        canvas.addEventListener("touchmove", touchXY, true);
+        canvas.addEventListener("touchend", touchUp, false);
+        
         window.onresize=function(){
             init();
         };
@@ -359,6 +504,11 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jsfeat-min.js"></script>
+    <script type="text/javascript" src="js/compatibility.js"></script>
+    <script type="text/javascript" src="js/profiler.js"></script>
+    <script type="text/javascript" src="js/median.js"></script>
 </body>
 
 </html>
