@@ -232,14 +232,14 @@ function updateBoundingBox(video_ctx) {
             
             var h = Math.abs(box[1]-box[3]);
             var h_mod = (h*median_s-h)/2;
-            var w = Math.abs(box[0]-box[2]);
-            //var w_mod = (w*median_s-w)/2;
-            var w_mod = (h*ratio-w)/2;
-            
-            box[0] += median_x-w_mod;
             box[1] += median_y-h_mod;
-            box[2] += median_x+w_mod;
             box[3] += median_y+h_mod;
+            
+            h = Math.abs(box[1]-box[3]);
+            var w = Math.abs(box[0]-box[2]);
+            var w_mod = (h*ratio-w)/2;
+            box[0] += median_x-w_mod;
+            box[2] = box[0] + h*ratio;
 
         }
         video_ctx.beginPath();
