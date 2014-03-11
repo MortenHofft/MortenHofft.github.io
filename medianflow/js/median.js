@@ -229,7 +229,7 @@ function updateBoundingBox(video_ctx) {
             }
             median_x = median(list_x, count);
             median_y = median(list_y, count);
-            median_s = median(list_s, scale_counter);
+            median_s = median(list_s, scale_counter-1);
             
             var h = Math.abs(box[1]-box[3]);
             var h_mod = (h*median_s-h)/2;
