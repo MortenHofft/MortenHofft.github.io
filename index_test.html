@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Portfolio - Morten Høfft</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+</head>
+
+<body class="bg-color">
+    <header class="">
+        <div class="videoheader">
+            <video id="big-video-vid_html5_api" preload="auto" webkit-playsinline="" autoplay="" src="slet.mp4"></video>
+            <div class="content header" style="position:relative">
+                <div class="center">
+                    <span class="inline portfolio">A</span>
+                </div>
+                <div class="center">
+                    <span class="inline headline">
+                        <h1>Portfolio</h1>
+                    </span>
+                </div>
+                <div class="center serif">
+                    <h3>by</h3>
+                </div>
+                <div class="center"></div>
+                <div>
+                    <div class="center bold green">Morten Høfft</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="content marbot">
+        <ul>
+            <li>
+                <a href="..">Home</a>
+            </li>
+            <li>
+                <a href="https://www.facebook.com/hoefft" target="_blank" class="fi-social-facebook icon" title="Facebook"></a>
+            </li>
+            <li>
+                <a href="https://github.com/MortenHofft" target="_blank" class="fi-social-github icon" title="Github"></a>
+            </li>
+            <li>
+                <a href="http://dk.linkedin.com/pub/morten-h%C3%B8fft/5/155/811" target="_blank" class="fi-social-linkedin icon" title="LinkedIn"></a>
+            </li>
+            <li>
+                <a href="about/">About</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="content" ng-app="posts">
+        <!--h1>
+            <a class="intro-post" href="about/">About</a>
+        </h1>
+        <div class="columns">
+            <p>
+                This site works as documentation and motivation to complete undertakings, which – in my experience – all to often end up half-baked and eventually lost. It is primarily for learning and the joy of it, but some projects might turn out to have the interest of other people.
+            </p>
+        </div-->
+        <div id="posts" ng-controller="postCtrl">
+            <div ng-include src="'posts.html'"></div>
+        </div>
+    </div>
+    <script>
+        function populate(data){
+             angular.module('posts', [])
+             .controller('postCtrl', function($scope) {
+                $scope.types = ["Projects", "Miscellaneous"];
+                $scope.data = {posts: data.feed.entry};
+                $scope.deepFilter = function(type) {
+                  return function( item ) {
+                    return item.gsx$type.$t === type;
+                  };
+                };
+                $scope.dateSort = function(item) {
+                    return item.gsx$date.$t;
+                }
+             });
+          };
+    </script>
+    <script src="https://spreadsheets.google.com/feeds/list/0AopignMyNhAgdHlHTmdvOEdaa21sTXdJbm9kME5hY1E/od6/public/values?alt=json-in-script&amp;callback=populate"></script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-48466800-1']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+    </script>
+</body>
+
+</html>

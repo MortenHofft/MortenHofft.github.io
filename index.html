@@ -19,8 +19,8 @@
                     <h1>Portfolio</h1>
                 </span>
             </div>
-            <div class="center serif">
-                <h3>by</h3>
+            <div class="center">
+                <h3>Algorithms, drawings and more</h3>
             </div>
             <div class="center"></div>
             <div>
@@ -48,37 +48,106 @@
         </ul>
     </nav>
 
-    <div class="content" ng-app="posts">
-        <!--h1>
-            <a class="intro-post" href="about/">About</a>
-        </h1>
-        <div class="columns">
-            <p>
-                This site works as documentation and motivation to complete undertakings, which – in my experience – all to often end up half-baked and eventually lost. It is primarily for learning and the joy of it, but some projects might turn out to have the interest of other people.
-            </p>
-        </div-->
-        <div id="posts" ng-controller="postCtrl">
-            <div ng-include src="'posts.html'"></div>
+    <div class="content">
+        <div id="posts">
+            
+            
+            <!--Projects-->
+            <div class="section group">
+                <ul>
+                    
+                    <li>
+                        <div class="col-item cleft">
+                            <div class="post">
+                                <p class="date">March 2, 2014</p>
+                                <a href="medianflow">
+                                    <h2 class="post-header">Object tracking</h2>
+                                </a>
+                                <p>
+                                    An algorithm for tracking objects as they move around in a video sequence. It is a JavaScript implementation and works real time, so you can try it using your webcam. Or just read about the workings and play with the interactive example.
+                                </p>
+                                <a class="pull-right" href="medianflow">
+                                    <span class="arrow">read more</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="col-item cright">
+                            <div class="post">
+                                <p class="date">March 1, 2014</p>
+                                <a href="typepicter">
+                                    <h2 class="post-header">Cherry bonsai font</h2>
+                                </a>
+                                <p>
+                                    A font for creating bonsai cherries. Ryan Holmberg wrote an article on the Typepicter a couple of days ago. A Japanese typewriter from the early twentieth century, specifically for making artistic images - ASCII art of the time. I've created a font that imitates a few units of the Typepicter.
+                                </p>
+                                <a class="pull-right" href="typepicter">
+                                    <span class="arrow">read more</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="col-item cleft">
+                            <div class="post">
+                                <p class="date">February 20, 2014</p>
+                                <a href="kierkegaard">
+                                    <h2 class="post-header">Kierkegaard</h2>
+                                </a>
+                                <p>
+                                    The Søren Kierkegaard Research Center has kindly published the collected works of Kierkegaard online. Unfortunately they are not made available as e-books, but as XML. The notation kn1 is thoroughly documented. I have made a parser that generates e-books based on the XML.
+                                </p>
+                                <a class="pull-right" href="kierkegaard">
+                                    <span class="arrow">read more</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="col-item cright">
+                            <div class="post">
+                                <p class="date">February 19, 2014</p>
+                                <a href="drawings">
+                                    <h2 class="post-header">Drawings</h2>
+                                </a>
+                                <p>
+                                    Not having brought a computer with me on vacation this fall, I did something else than programming for once - drawing. It turned out to be surprisingly easy and pleasant to draw on a phone. Some took hours, others minutes. They were drawn on the Faroe Islands between hikes - hence the concentration of fish birds and rain.
+                                </p>
+                                <a class="pull-right" href="drawings">
+                                    <span class="arrow">read more</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="col-item cleft">
+                            <div class="post">
+                                <p class="date">February 18, 2014</p>
+                                <a href="thesis">
+                                    <h2 class="post-header">Thesis</h2>
+                                </a>
+                                <p>
+                                    In 2012 I wrote my thesis. The subject was computer vision and recognition of objects in videos. The user points at the object in the first frame, and the algorithm will attempt, without prior training, to recognize in real time for the remainder of the video. Below are the — slightly more technical — abstract and a sample video.
+                                </p>
+                                <a class="pull-right" href="thesis">
+                                    <span class="arrow">read more</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+            
         </div>
     </div>
-    <script>
-        function populate(data){
-             angular.module('posts', [])
-             .controller('postCtrl', function($scope) {
-                $scope.types = ["Projects", "Miscellaneous"];
-                $scope.data = {posts: data.feed.entry};
-                $scope.deepFilter = function(type) {
-                  return function( item ) {
-                    return item.gsx$type.$t === type;
-                  };
-                };
-                $scope.dateSort = function(item) {
-                    return item.gsx$date.$t;
-                }
-             });
-          };
-    </script>
-    <script src="https://spreadsheets.google.com/feeds/list/0AopignMyNhAgdHlHTmdvOEdaa21sTXdJbm9kME5hY1E/od6/public/values?alt=json-in-script&amp;callback=populate"></script>
+    
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
