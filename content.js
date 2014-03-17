@@ -3,7 +3,7 @@ var posts = [
      date:"March 17, 2014",
      machinedate: "20140317",
      title:"Quickselect",
-     description:"The median is often a useful number. In many cases it can describe data better than the average, as it is resistant to outliers and contaminated data in general. But it is expensive to sort the entire array. Instead we can use an algorithm dedicated to finding the n-th largest number - namely Hoare's selection algorithm Quickselect.",
+     description:"The median is often a useful number. In many cases it can describe data better than the average, as it is resistant to outliers and contaminated data in general. But it can be expensive to sort an entire array. Instead we can use an algorithm dedicated to finding the n-th largest number - namely Hoare's selection algorithm Quickselect.",
      link:"quickselect"
     },
     {type:"Projects",
