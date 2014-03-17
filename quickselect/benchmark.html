@@ -1,0 +1,165 @@
+<html>
+
+<head>
+    
+</head>
+
+<body>
+    <p id="MyQuickSelect"></p>
+    <p id="Sort"></p>
+    <p id="OtherQuickSelect"></p>
+    <script>
+        //javascript implementation of quickselect
+        function quickSelect2( array, k ) {
+            var left = 0, right = array.length - 1;
+
+            while( true ) {
+                if( right <= left + 1 ) {
+                 if( right === left + 1 && array[right] < array[left] )
+                 swap( array, left, right );
+                 return array[k];
+                } else {
+                    //the unsigned bitshift has the effect of dividing by 2 
+                    //and discarding any remainder
+                 var middle = ( left + right ) >>> 1;
+                 swap( array, middle, left + 1 );
+
+                 if( array[ left ] > array[ right ] )
+                 swap( array, left, right );
+
+                 if( array[ left + 1 ] > array[ right ] )
+                 swap( array, left + 1, right );
+
+                 if( array[ left ] > array[ left + 1 ] )
+                 swap( array, left, left + 1 );
+
+                 var i = left + 1, j = right;
+                 var pivot = array[ i ];
+                 while( true ) {
+                     i++;
+                     while( array[ i ] < pivot )
+                         i++;
+
+                     j--;
+                     while( array[ j ] > pivot )
+                         j--;
+
+                     if( j < i )
+                         break;
+                     swap(array, i, j);
+                 }
+                 array[left + 1] = array[j];
+                 array[j] = pivot;
+
+                 if( j >= k )
+                 right = j - 1;
+
+                 if( j <= k )
+                    left = i;
+                }
+            }
+        }
+
+        function swap( array, i, j ) {
+            var temp = array[ i ];
+            array[ i ] = array[ j ];
+            array[ j ] = temp;
+        }
+        
+        function QuickSelect(list, left, right, n) {
+            if (left == right)
+                return list[left];
+            var tmp;
+            while (true) {
+                pivotIndex = left + ((right - left) >>> 1); // select pivotIndex between left and right
+
+                var pivotValue = list[pivotIndex];
+                // Move pivot to end
+                tmp = list[pivotIndex];
+                list[pivotIndex] = list[right];
+                list[right] = tmp;
+                pivotIndex = left;
+                for (var i = left; i < right; i++){
+                     if (list[i] <= pivotValue){
+                         //swap
+                         tmp = list[pivotIndex];
+                         list[pivotIndex] = list[i];
+                         list[i] = tmp;
+                         pivotIndex++;
+                     }
+                }
+                // Move pivot to its final place
+                tmp = list[right];
+                list[right] = list[pivotIndex];
+                list[pivotIndex] = tmp;
+
+                if (n == pivotIndex)
+                    return list[n];
+                else if (n < pivotIndex)
+                    right = pivotIndex - 1;
+                else
+                    left = pivotIndex + 1;
+            }
+        }
+        
+        var seedStart = 1;
+        var seed = seedStart;
+        function random() {
+            var x = Math.sin(seed++) * 100000;
+            return x - Math.floor(x);
+        }
+
+        var d = new Date();
+
+        var experiments = 10000;
+        var a_length = 500;
+        median_pos = Math.floor(a_length/2);
+        
+        //order matters. First processed performs slightly better
+        seed = seedStart;
+        d = new Date();
+        var start_classic = d.getTime();
+        for (var j=0; j < experiments; j++){
+            var test_array = [];
+            for (var i=0; i < a_length; i++) test_array.push(Math.round(random()*10000));
+            //for (var i=0; i < a_length; i++) test_array.push(random());
+            test_array.sort();
+            var res = test_array[median_pos];
+        }
+        d = new Date();
+        var end_classic = d.getTime();
+        
+        seed = seedStart;
+        d = new Date();
+        var start_my = d.getTime();
+        for (var j=0; j < experiments; j++){
+            var test_array = [];
+            for (var i=0; i < a_length; i++) test_array.push(Math.round(random()*10000));
+            //for (var i=0; i < a_length; i++) test_array.push(random());
+            var res = QuickSelect(test_array, 0, test_array.length-1, median_pos);
+        }
+        d = new Date();
+        var end_my = d.getTime();
+        
+        
+        seed = seedStart;
+        d = new Date();
+        var start_quickselect = d.getTime();
+        for (var j=0; j < experiments; j++){
+            var test_array = [];
+            for (var i=0; i < a_length; i++) test_array.push(Math.round(random()*10000));
+            //for (var i=0; i < a_length; i++) test_array.push(random());
+            var res = quickSelect2(test_array, median_pos);
+        }
+        d = new Date();
+        var end_quickselect = d.getTime();
+        
+        
+        //var result = quickSelect(test_array, 5);
+        document.getElementById('MyQuickSelect').innerHTML = "MyQuickSelect: " + (end_my-start_my);
+        document.getElementById('Sort').innerHTML = "Using sort: " + (end_classic-start_classic);
+        document.getElementById('OtherQuickSelect').innerHTML = "Other QuickSelect: " + (end_quickselect-start_quickselect);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Portfolio - Quickselect</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css" />
+
+    <style>
+        .table{display:table}
+        .tablecaption{display:table}
+        .tablerow{display:table-row;}
+        .tablecell{display:table-cell; padding: 5px;}
+        .bar{background-color: #ffb618; padding: 5px;}
+        .bold{font-weight: 400;}
+    </style>
+</head>
+
+<body class="bg-color">
+    <header class="header">
+        <div class="center">
+            <span class="inline portfolio">Portfolio</span>
+        </div>
+        <div class="center">
+            <span class="inline headline">
+                <h1>Quickselect</h1>
+            </span>
+        </div>
+        <div class="center serif">
+            <h3>Hoare's selection algorithm</h3>
+        </div>
+        <div>
+            <div class="center bold yellow">By Morten Høfft - March 17, 2014</div>
+        </div>
+    </header>
+    <nav class="content marbot">
+        <ul>
+            <li>
+                <a href="..">Home</a>
+            </li>
+            <li>
+                <a href="https://www.facebook.com/hoefft" target="_blank" class="fi-social-facebook icon" title="Facebook"></a>
+            </li>
+            <li>
+                <a href="https://github.com/MortenHofft" target="_blank" class="fi-social-github icon" title="Github"></a>
+            </li>
+            <li>
+                <a href="http://www.linkedin.com/in/hofft" target="_blank" class="fi-social-linkedin icon" title="LinkedIn"></a>
+            </li>
+            <li>
+                <a href="../about/">About</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="content">
+        <p>
+            The median is often a useful number. In many cases it can describe data better than the average, as it is resistant to outliers and contaminated data in general. Take the list: 4, 4, 4, 5, 5, 5, 6, 6, 60. The average is 9 but the median is 5. Depending on usage, 5 might be more informative.
+        </p>
+        <p>
+        It is trivial to find the median. We can simply sort the list and select the middle index. But sorting the entire array is a waste if we only need to find the median. In this case we can use an algorithm dedicated to finding the n-th largest number - namely Hoare's selection algorithm aka Quickselect. I've implemented a JavaScript version based on the pseudo code on Wikipedia. The inspiration for doing so and an example where the median is used is my implementation of <a href="../medianflow/">Median Flow tracking</a>. See benchmarking and code below. I have rewritten the code slightly to pack it into a single function.
+        </p>
+        
+        
+        <p class="divider">Implementation</p>
+        <!-- HTML generated using hilite.me --><div style="overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%; padding-right:10px;"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #228899; font-weight: bold">function</span> QuickSelect(list, left, right, n) {
+    <span style="color: #228899; font-weight: bold">if</span> (left <span style="color: #333333">==</span> right)
+        <span style="color: #228899; font-weight: bold">return</span> list[left];
+    <span style="color: #228899; font-weight: bold">var</span> tmp;
+    <span style="color: #228899; font-weight: bold">while</span> (<span style="color: #228899; font-weight: bold">true</span>) {
+        pivotIndex <span style="color: #333333">=</span> left <span style="color: #333333">+</span> ((right <span style="color: #333333">-</span> left) <span style="color: #333333">&gt;&gt;&gt;</span> <span style="color: #6666ff; font-weight: bold">1</span>); <span style="color: #666666; font-style: italic">// select pivotIndex between left and right</span>
+
+        <span style="color: #228899; font-weight: bold">var</span> pivotValue <span style="color: #333333">=</span> list[pivotIndex];
+        <span style="color: #666666; font-style: italic">// Move pivot to end</span>
+        tmp <span style="color: #333333">=</span> list[pivotIndex];
+        list[pivotIndex] <span style="color: #333333">=</span> list[right];
+        list[right] <span style="color: #333333">=</span> tmp;
+        pivotIndex <span style="color: #333333">=</span> left;
+        <span style="color: #228899; font-weight: bold">for</span> (<span style="color: #228899; font-weight: bold">var</span> i <span style="color: #333333">=</span> left; i <span style="color: #333333">&lt;</span> right; i<span style="color: #333333">++</span>) {
+            <span style="color: #228899; font-weight: bold">if</span> (list[i] <span style="color: #333333">&lt;=</span> pivotValue) {
+                <span style="color: #666666; font-style: italic">//swap</span>
+                tmp <span style="color: #333333">=</span> list[pivotIndex];
+                list[pivotIndex] <span style="color: #333333">=</span> list[i];
+                list[i] <span style="color: #333333">=</span> tmp;
+                pivotIndex<span style="color: #333333">++</span>;
+            }
+        }
+        <span style="color: #666666; font-style: italic">// Move pivot to its final place</span>
+        tmp <span style="color: #333333">=</span> list[right];
+        list[right] <span style="color: #333333">=</span> list[pivotIndex];
+        list[pivotIndex] <span style="color: #333333">=</span> tmp;
+
+        <span style="color: #228899; font-weight: bold">if</span> (n <span style="color: #333333">==</span> pivotIndex)
+            <span style="color: #228899; font-weight: bold">return</span> list[n];
+        <span style="color: #228899; font-weight: bold">else</span> <span style="color: #228899; font-weight: bold">if</span> (n <span style="color: #333333">&lt;</span> pivotIndex)
+            right <span style="color: #333333">=</span> pivotIndex <span style="color: #333333">-</span> <span style="color: #6666ff; font-weight: bold">1</span>;
+        <span style="color: #228899; font-weight: bold">else</span>
+            left <span style="color: #333333">=</span> pivotIndex <span style="color: #333333">+</span> <span style="color: #6666ff; font-weight: bold">1</span>;
+    }
+}
+</pre></td></tr></table></div>
+
+
+
+    <p class="divider">Benchmarking (firefox)</p>
+        <p>
+            <div class="bold">1K iterations of sorting 5K random integers between 0-10K</div>
+            <div class="table">
+                <div class="tablerow">
+                    <div class="tablecell">Native sort</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:257px;">772 ms</div>
+                    </div>
+                </div>
+                <div class="tablerow">
+                    <div class="tablecell">Quickselect</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:76px;">227 ms</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bold">10K iterations of sorting 500 random integers between 0-10K</div>
+            <div class="table">
+                <div class="tablerow">
+                    <div class="tablecell">Native sort</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:216px;">648 ms</div>
+                    </div>
+                </div>
+                <div class="tablerow">
+                    <div class="tablecell">Quickselect</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:85px;">255 ms</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bold">100K iterations of sorting 50 random integers between 0-10K</div>
+            <div class="table">
+                <div class="tablerow">
+                    <div class="tablecell">Native sort</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:193px;">578 ms</div>
+                    </div>
+                </div>
+                <div class="tablerow">
+                    <div class="tablecell">Quickselect</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:102px;">296 ms</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bold">10K iterations of sorting 500 random floats between 0-1</div>
+            <div class="table">
+                <div class="tablerow">
+                    <div class="tablecell">Native sort</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:268px;">1340 ms</div>
+                    </div>
+                </div>
+                <div class="tablerow">
+                    <div class="tablecell">Quickselect</div>
+                    <div class="tablecell">
+                        <div class="bar" style="width:45px;white-space:nowrap;">224 ms</div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </p>
+
+    
+    
+    </div>
+
+    <script type="text/javascript">
+        /*var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-48466800-1']);
+            _gaq.push(['_trackPageview']);
+    
+            (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();*/
+    </script>
+</body>
+
+</html>
