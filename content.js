@@ -35,7 +35,7 @@ var posts = [
      link:"drawings"
     },
     {type:"Projects",
-     date:"Begruary 18, 2014",
+     date:"February 18, 2014",
      machinedate: "20140218",
      title:"Thesis",
      description:"In 2012 I wrote my thesis. The subject was computer vision and recognition of objects in videos. The user points at the object in the first frame, and the algorithm will attempt, without prior training, to recognize in real time for the remainder of the video. Below are the — slightly more technical — abstract and a sample video.",
