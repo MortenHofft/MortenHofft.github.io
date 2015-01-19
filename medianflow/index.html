@@ -136,8 +136,8 @@
         </div>
         
         <p class="divider">Median Flow solution</p>
-        <p>int
-            We select an area we are interested in. We then intiate a grid of points we can track using Lucas-Kanade point tracking. The question is how we update our area of interst based on the - often conflicting - motion estimates given by the LK point tracker. Median Flow suggest taking the median of the vectors. That is: list the movement of the points on the x-axis on take the median. Same for the y-axis. Scale is calculated by considering all pairs of points and meassuring the relative change in distance (distNew/distOld). Again the median is selected. This turns out to be a fairly robust estimate that <a href="http://personal.ee.surrey.ac.uk/Personal/Z.Kalal/Publications/2010_icpr.pdf">compares with the best</a>. Further it has the benefit of being simple to understand and implement.
+        <p>
+            We select an area we are interested in. We then intiate a grid of points we can track using Lucas-Kanade point tracking. The question is how we update our area of interst based on the - often conflicting - motion estimates given by the LK point tracker. Median Flow suggest taking the median of the vectors. That is: list the movement of the points on the x-axis and take the median. Same for the y-axis. Scale is calculated by considering all pairs of points and meassuring the relative change in distance (distNew/distOld). Again the median is selected. This turns out to be a fairly robust estimate that <a href="http://personal.ee.surrey.ac.uk/Personal/Z.Kalal/Publications/2010_icpr.pdf">compares with the best</a>. Further it has the benefit of being simple to understand and implement.
         </p>
         <p>
             Above example illustrates how values are calculated based on the point movement. To see changes in the medians you can drag the points (something the point tracker would normally do).
