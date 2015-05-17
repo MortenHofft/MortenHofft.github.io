@@ -1,0 +1,186 @@
+/*Reset Styles*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+ol, ul {
+  list-style: none; }
+
+html {
+  font-size: 62.5%;
+  height: 100%;
+  background: #4a4a4a;
+  color: #fcfcfc; }
+
+body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-size: 1.5rem; }
+
+* {
+  -ms-box-sizing: border-box;
+  box-sizing: border-box; }
+
+@media (min-width: 572px) {
+  body {
+    font-size: 14px;
+    font-size: 1.4rem; } }
+
+.container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+
+main {
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
+  height: 100%;
+  z-index: 100;
+  overflow: hidden;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
+.header {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  background: #595f69;
+  color: #fcfcfc;
+  z-index: 200;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  box-shadow: 0 5px 1px rgba(0, 0, 0, 0.175); }
+
+@media (max-width: 571px) {
+  .hidden {
+    display: none; } }
+
+.layer-toggle {
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto; }
+
+.search {
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end; }
+  .search input {
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    width: 500px; }
+  .search button {
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto; }
+
+aside {
+  -webkit-flex: 0 0 100%;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  overflow-y: scroll;
+  height: 100%; }
+  aside div {
+    margin: 2px 5px;
+    padding: 10px 10px;
+    background: #545454; }
+
+#layers li span {
+  float: right;
+  cursor: pointer;
+  color: #bababa; }
+  #layers li span:hover {
+    color: #fcfcfc; }
+
+@media (min-width: 572px) {
+  aside {
+    -webkit-flex: 0 0 300px;
+    -ms-flex: 0 0 300px;
+    flex: 0 0 300px; }
+  .layer-toggle {
+    display: none; } }
+
+input[type=text] {
+  text-overflow: ellipsis;
+  color: #fcfcfc;
+  background: transparent;
+  padding: 10px 10px 10px 10px;
+  margin: 10px;
+  border: 1px solid #bababa;
+  overflow: hidden;
+  appearance: none;
+  border-radius: 0;
+  border-radius: 0; }
+  input[type=text]:focus {
+    outline: none;
+    border-color: #fcfcfc; }
+
+::-webkit-input-placeholder {
+  color: #bababa; }
+
+::-moz-placeholder {
+  color: #bababa; }
+
+:-ms-input-placeholder {
+  color: #bababa; }
+
+::placeholder {
+  color: #bababa; }
+
+button {
+  outline: none;
+  border-radius: 0px;
+  padding: 10px 20px 10px 20px;
+  background: #4D97C8;
+  color: #fcfcfc;
+  border: 0px;
+  font-size: 2rem;
+  cursor: pointer; }
+  button:disabled {
+    background: none;
+    color: #bababa; }
+
+.dropdown-menu {
+  color: #414141;
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  min-width: 160px;
+  padding: 5px 0;
+  text-align: left;
+  background-color: #fcfcfc;
+  box-shadow: 2px 5px 1px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box; }
+  .dropdown-menu > li > a {
+    display: block;
+    font-weight: 400;
+    white-space: nowrap;
+    padding: 3px 20px;
+    line-height: 1.42857; }
+  .dropdown-menu .active > a, .dropdown-menu .active > a:hover, .dropdown-menu .active > a:focus, .dropdown-menu .active > a:hover {
+    color: #fcfcfc;
+    text-decoration: none;
+    outline: 0;
+    background-color: #4D97C8;
+    cursor: pointer; }

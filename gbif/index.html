@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--[if IE]>
+<html class="no-flex">
+<![endif]-->
+<!--[if !IE]> -->
+<html lang="en">
+<!-- <![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+
+    <script>
+        function cdnLoad(u) {
+            document.write('<script src="' + u + '"><\/script>');
+        }
+
+        function moduleExists(moduleName) {
+            try {
+                window.angular.module(moduleName);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+    </script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script>
+        if (!(window.angular)) cdnLoad("vendor/angular/angular.min.js");
+    </script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.min.js"></script>
+    <script>
+        if (!moduleExists('ui.bootstrap')) cdnLoad("vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js");
+    </script>
+
+    <script type="text/javascript" src="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script>
+        if (!(window.L)) cdnLoad("vendor/leaflet/dist/leaflet.js");
+    </script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+
+    <!-- style:css -->
+    <link rel="stylesheet" href="css/main.min-33302439758f3e3ce601a6d2fd63add3.css">
+    <!-- endinject -->
+</head>
+
+<body ng-app="mapApp">
+    <div class="container" ng-controller="LayerController as Layers">
+        <header class="header" ng-controller="SuggestController as Suggest" id="SuggestController">
+            <button ng-if="!Layers.isEmpty()" class="layer-toggle" ng-click="Layers.visible = !Layers.visible">L</button>
+            <form class="top-buffer col-xs-12 search" role="search">
+                <input type="text" placeholder="Species e.g. 'Puma concolor'" ng-model="Suggest.species" typeahead="suggestion as suggestion.canonicalName for suggestion in Suggest.getSpecies($viewValue)" class="form-control" required>    
+                <button type="submit" ng-disabled="!Suggest.isValid()" ng-click="Suggest.add(Suggest.species)" class="btn btn-default">+</button>
+            </form>
+        </header>
+        <main ng-controller="MapController as Map">
+            <aside ng-if="!Layers.isEmpty()" id="layers" ng-class="{'hidden': Layers.isVisible()}">
+                <ul ng-model="Layers.layers">
+                    <li ng-repeat="item in Layers.layers" class="item">
+                        <div>
+                            {{item.name}}
+                            <span ng-click="Layers.remove(item)">&#10005;</span>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+            <leaflet center="Map.Earth" layers="Map.layers" width="100%" class="map"></leaflet>
+        </main>
+
+    </div>
+    <!-- app:js -->
+    <script src="js/app.min-09f327d7cc1db05f3801d6367341451d.js"></script>
+    <!-- endinject -->
+</body>
+
+</html>
