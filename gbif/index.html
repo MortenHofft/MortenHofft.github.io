@@ -51,7 +51,7 @@
         <header class="header" ng-controller="SuggestController as Suggest" id="SuggestController">
             <button ng-if="!Layers.isEmpty()" class="layer-toggle" ng-click="Layers.visible = !Layers.visible">L</button>
             <form class="top-buffer col-xs-12 search" role="search">
-                <input type="text" placeholder="Species e.g. 'Puma concolor'" ng-model="Suggest.species" typeahead="suggestion as suggestion.canonicalName for suggestion in Suggest.getSpecies($viewValue)" class="form-control" required>    
+                <input type="text" placeholder="Species e.g. 'Puma concolor'" ng-model="Suggest.species" typeahead="suggestion as suggestion.canonicalName for suggestion in Suggest.getSpecies($viewValue)" class="form-control" >    
                 <button type="submit" ng-disabled="!Suggest.isValid()" ng-click="Suggest.add(Suggest.species)" class="btn btn-default">+</button>
             </form>
         </header>
